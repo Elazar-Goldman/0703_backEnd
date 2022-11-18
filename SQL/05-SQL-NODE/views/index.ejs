@@ -1,0 +1,38 @@
+<%- include('./partials/headers.ejs') %> 
+<link rel="stylesheet" href="./css/index.css">
+<title>Fruits</title>
+<%- include('./partials/navBar.ejs') %> 
+    <h1>My favorir frot is:  </h1>
+
+    <% reoult.forEach((item) => { %>
+        <div class="wrap">
+        <h3 class="text-danger">Fruit is <%= item.title%></h3>
+        <h3>this product is:  <%= item.body%></h3>
+        <h3>price is:  $<%= item.price%></h3>
+        <!--Cart number (in this case 111) is a uuid (unique unerveral ID) and it will be -->
+        <!--it will be genrated for us on login/התחל  קניה -->   
+        <form action="/list/111/<%= item.id%>/<%=item.price%>" method="post"> 
+          <input type="number" name="total_prod" class="total" id="" placeholder="0">
+        <button class="plus" type="button">+</button>
+        <button class="minus" type="button">-</button>
+        <button>submit</button>
+      </form>
+    </div>
+    <div>This is for Admin</div>
+    <a href="/update/<%=item.id%>">🖉</a>
+    <a href="/delete/<%=item.id%>">🗑️</a>
+
+        <%})%>
+
+      <button><a href="/add">Add new product</a> </button>
+<%unuiqeCarts.forEach((cart)=>{ %>
+  <button class="btn btn-danger"><a href="cart/<%=cart.cart_num%>"><%=cart.cart_num%></a></button>
+<%  })%>
+
+    </div>
+      <!-- JavaScript Bundle with Popper -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+      <script src="./js/index.js"></script>
+
+</body>
+</html>

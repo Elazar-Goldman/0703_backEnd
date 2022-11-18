@@ -52,6 +52,42 @@ let oldCars = [
   },
 ];
 
+// how to change Json
+app.get("/changeGame", (req, res) => {
+  let query = "SELECT games from games";
+
+  connection.query(query, (err, resoult) => {
+    if (err) console.log(err);
+
+    let myJSON = resoult;
+
+    let jsRes = JSON.parse(resoult);
+    jsRes[0].games.board2 = "Monpuily";
+    let newJson = JSON.stringify(jsRes);
+    let backJSON = JSON.parse(newJson);
+    let queryUpdtae = `UPDATE games
+    SET games = ${backJSON}
+    WHERE user_id = 2
+    `;
+  });
+});
+
+// endpoint to add games
+app.post("/addGames/:user_id", (req, res) => {
+  // thuis is to alllow for a new varable name
+  let id = req.params.user_id;
+  let games = JSON.stringify(req.body);
+  let query = `INSERT INTO games(user_id, games) VALUES 
+  (${id},'${games}')`;
+  connection.query(query);
+  res.render("games.ejs");
+});
+
+// a navagtion endpoint for Games
+app.get("/addGame", (req, res) => {
+  res.render("games.ejs");
+});
+
 let inserIntro = `INSERT INTO products(\`title\`, \`body\`, \`price\`, \`cat_id\`)
 VALUES`;
 
@@ -101,6 +137,51 @@ let choseFruit = () => {
 
   return myFavFruits[rand];
 };
+// END pond to get carts of cart number
+app.get("/cart/:cart_num", async (req, res) => {
+  // user ID will be recived in login
+  let userId = 2;
+  // This is JS, This is desrtocution of an object
+  let { cart_num } = req.params;
+  //
+  let stud = {
+    name: "Eli",
+    car: "Fiat",
+    City: "Jerusalem",
+  };
+
+  let { name, car, City } = stud;
+
+  let query = `SELECT total, prod_num, users.name, products.title, products.body FROM shoping_cart
+   JOIN users
+    ON shoping_cart.user_id = ${userId} 
+    JOIN products 
+    ON shoping_cart.prod_id = products.id 
+    WHERE cart_num = ${cart_num};`;
+
+  connection.query(query, (err, resoult) => {
+    if (err) console.log(err);
+    console.log(resoult);
+
+    res.render("cart.ejs", { resoult });
+  });
+});
+
+app.post("/list/:cartId/:prodId/:prodPrice", (req, res) => {
+  let { cartId, prodId, prodPrice } = req.params;
+  let { total_prod } = req.body;
+  let totalCost = +prodPrice * +total_prod;
+  // user ID will be recived in login
+  let userId = 2;
+  let query = `INSERT INTO shoping_cart (\`user_id\`, \`prod_id\`, \`total\`, \`prod_num\`,\`cart_num\` ) VALUES
+(${userId},${prodId},${totalCost},${total_prod}, ${cartId});`;
+
+  connection.query(query, (err, resoult) => {
+    if (err) console.log(err);
+    console.log(resoult);
+  });
+  res.redirect("/fruits");
+});
 
 app.get("/cart/:cartId/:prodId/:prodPrice", (req, res) => {
   let { cartId, prodId, prodPrice } = req.params;
@@ -177,10 +258,24 @@ app.get("/add", (req, res) => {
 
 app.get("/fruits", async (req, res) => {
   let query = `SELECT * FROM products`;
+  let cartQuery = `SELECT cart_num FROM shoping_cart`;
   await connection.query(query, (err, reoult) => {
     if (err) console.log(err);
 
-    res.render("index.ejs", { reoult });
+    connection.query(cartQuery, (err, cartList) => {
+      if (err) console.log(err);
+
+      let unuiqeCarts = [];
+      let unuiqeIndex = [];
+      cartList.map((cart) => {
+        if (!unuiqeIndex.includes(cart.cart_num)) {
+          unuiqeIndex.push(cart.cart_num);
+          unuiqeCarts.push(cart);
+        }
+      });
+      console.log(unuiqeCarts);
+      res.render("index.ejs", { reoult, unuiqeCarts });
+    });
   });
 });
 
