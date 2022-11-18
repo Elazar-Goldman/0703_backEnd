@@ -1,0 +1,10 @@
+body {
+    background-color: aquamarine;
+}
+
+div.wrap{
+    border: 1px solid orange;
+    width:  30vw;
+    margin: 2px;
+    padding: 3px;
+}

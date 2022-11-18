@@ -1,0 +1,43 @@
+<!--  -->
+<%- include('./partials/headers.ejs') %> 
+<link rel="stylesheet" href="./css/index.css">
+<title>Fruits</title>
+<%- include('./partials/navBar.ejs') %> 
+    <h1>My favorir frot is:  </h1>
+    <% reoult.forEach((item,index) => { %>
+        <div class="wrap">
+        <h3 class="text-danger">Fruit is <%= item.title%></h3>
+        <h3>this product is:  <%= item.body%></h3>
+        <h3>price is:  $<%= item.price%></h3>
+            
+      
+        <form action="/myCart/101" method="post">
+          <div>
+            <label for="">Chose amount of <%=item.title %></label>
+            <input type="number" class="total" value="0" name="<%= item.id%>">
+            <div>
+            <button class="plus" type="button" > +</button>
+            <button class="minus" type="button">-</button>
+            <button> Add to cart</button>
+          </div>
+          </div>
+
+        </form>
+       
+        <!-- this is for admin -->
+        <!-- <a href="/update/<%=item.id%>">🖉</a>
+        <a href="/delete/<%=item.id%>">🗑</a> -->
+
+        <button><a href="/cart/101/<%=item.id%>/<%=item.price%>">submit</a></button>
+    </div>
+        <%})%>
+
+      <button><a href="/add">Add new product</a> </button>
+
+    </div>
+      <!-- JavaScript Bundle with Popper -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+      <script src="./js/index.js"></script>
+
+</body>
+</html>
